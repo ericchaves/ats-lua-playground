@@ -1,0 +1,22 @@
+--- src/makefile	2019-05-03 23:38:14.205542871 +0000
++++ src/makefile	2019-05-03 23:41:02.691885372 +0000
+@@ -46,8 +46,8 @@
+ # /usr/local/include
+ # /usr/local/include/lua$(LUAV)
+ # where lua headers are found for linux builds
+-LUAINC_linux_base?=/usr/include
+-LUAINC_linux?=$(LUAINC_linux_base)/lua/$(LUAV)
++LUAINC_linux_base?=/usr/local/include
++LUAINC_linux?=$(LUAINC_linux_base)/luajit-2.0
+ LUAPREFIX_linux?=/usr/local
+ CDIR_linux?=lib/lua/$(LUAV)
+ LDIR_linux?=share/lua/$(LUAV)
+@@ -151,7 +151,7 @@
+ 	-DMIME_API='__attribute__((visibility("default")))'
+ CFLAGS_linux= -I$(LUAINC) $(DEF) -pedantic -Wall -Wshadow -Wextra \
+ 	-Wimplicit -O2 -ggdb3 -fpic -fvisibility=hidden
+-LDFLAGS_linux=-O -shared -fpic -o 
++LDFLAGS_linux=-O -lluajit-5.1 -ldl -lm -Wl,-E -shared -fpic -o 
+ LD_linux=gcc
+ SOCKET_linux=usocket.o
+ 
