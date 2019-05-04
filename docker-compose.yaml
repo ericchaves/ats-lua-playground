@@ -16,7 +16,7 @@ services:
         ATS_VERSION: 8.0.3
         LUAJIT_VERSION: 2.0.5
         LUAROCKS_VERSION: 3.0.4
-    image: cerradotech/trafficserver:latest
+    image: trafficserver-luajit:latest
     volumes:
     - ${PWD}/config/records.config:/usr/local/etc/trafficserver/records.config
     - ${PWD}/config/remap.config:/opt/ats/etc/trafficserver/remap.config

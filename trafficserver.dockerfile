@@ -18,8 +18,7 @@ RUN yum clean all && yum update -y \
     telnet bind-utils net-tools lsof centos-release-scl -y \
   && yum install devtoolset-7 -y
 
-RUN  mkdir -p /opt/patches
-COPY ./patches/ /opt/patches
+COPY ./luasocket.patch /tmp/
 
 RUN cd /tmp \ 
   && curl -fsSLO http://luajit.org/download/LuaJIT-${LUAJIT_VERSION}.tar.gz \
@@ -34,7 +33,6 @@ RUN set -xe \
   && curl -fsSLO http://www-us.apache.org/dist/trafficserver/trafficserver-${ATS_VERSION}.tar.bz2 \
   && tar -xf trafficserver-${ATS_VERSION}.tar.bz2 \
   && cd trafficserver-${ATS_VERSION} \
-  && patch -p0 < /opt/patches/tslua.patch \
   && autoreconf -if \
   && scl enable devtoolset-7 "./configure --with-luajit=/usr/local" \
   && scl enable devtoolset-7 "make -j$(getconf _NPROCESSORS_ONLN) && make install"
@@ -47,7 +45,7 @@ RUN set -xe \
   && ./configure --with-lua="/usr/local/" --with-lua-include="/usr/local/include/luajit-2.0" --force-config \
   && make build bootstrap
 
-# install luasocket and redis-lua using luarocks - easier to maintain
+# installing luasocket and redis-lua using luarocks - easier to maintain
 RUN set -xe \
   && luarocks install luasocket \
   && luarocks install redis-lua
@@ -58,7 +56,7 @@ RUN set -xe \
   && curl -fsSL https://github.com/diegonehab/luasocket/archive/v3.0-rc1.tar.gz -o luasocket.tar.gz \
   && tar zxpf luasocket.tar.gz \
   && cd luasocket-3.0-rc1 \
-  && patch -p0 < /opt/patches/luasocket.patch \
+  && patch -p0 < /tmp/luasocket.patch \
   && make linux && make install 
   
 RUN cd /tmp\
